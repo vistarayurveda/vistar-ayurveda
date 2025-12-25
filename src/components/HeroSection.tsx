@@ -18,8 +18,8 @@ const HeroSection = () => {
       <div className="absolute top-1/4 left-10 w-20 h-20 bg-primary/10 rounded-full blur-xl animate-float" />
       <div className="absolute bottom-1/4 right-10 w-32 h-32 bg-accent/10 rounded-full blur-xl animate-float" style={{ animationDelay: "1s" }} />
       
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="container mx-auto px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
           {/* Content */}
           <div className="text-center lg:text-left space-y-6 opacity-0 animate-fade-up">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary rounded-full border border-primary/30">
@@ -84,11 +84,6 @@ const HeroSection = () => {
                 alt="Vistar Ayurveda Longjack Premium Herbal Supplement"
                 className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl border border-primary/20"
               />
-            </div>
-            
-            {/* Floating Badge */}
-            <div className="absolute -top-4 -right-4 md:top-8 md:right-8 bg-accent text-accent-foreground px-4 py-2 rounded-full font-bold text-sm shadow-lg animate-float">
-              ⭐ Premium Quality
             </div>
           </div>
         </div>
