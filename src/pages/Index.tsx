@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
-import HeroCarousel from "@/components/HeroCarousel";
-import ProductDetails from "@/components/ProductDetails";
+import HeroSection from "@/components/HeroSection";
 import BentoGrid from "@/components/BentoGrid";
 import ReviewsSection from "@/components/ReviewsSection";
 import CTASection from "@/components/CTASection";
@@ -11,8 +10,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <HeroCarousel />
-        <ProductDetails />
+        <HeroSection />
         <BentoGrid />
         <ReviewsSection />
         <CTASection />

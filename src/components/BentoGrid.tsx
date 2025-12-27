@@ -35,7 +35,14 @@ const benefits = [
     description: "Koi side effects nahi, bilkul natural",
     className: "md:col-span-1",
     featured: false,
-  }
+  },
+  {
+    icon: Heart,
+    title: "Overall Wellness",
+    description: "Complete health aur vitality support",
+    className: "md:col-span-2",
+    featured: false,
+  },
 ];
 
 const BentoGrid = () => {
