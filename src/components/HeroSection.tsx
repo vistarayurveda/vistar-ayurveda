@@ -85,11 +85,6 @@ const HeroSection = () => {
                 className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl border border-primary/20"
               />
             </div>
-            
-            {/* Floating Badge */}
-            <div className="absolute -top-4 -right-4 md:top-8 md:right-8 bg-accent text-accent-foreground px-4 py-2 rounded-full font-bold text-sm shadow-lg animate-float">
-              ⭐ Premium Quality
-            </div>
           </div>
         </div>
       </div>

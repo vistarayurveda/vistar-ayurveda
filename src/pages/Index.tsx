@@ -4,13 +4,16 @@ import BentoGrid from "@/components/BentoGrid";
 import ReviewsSection from "@/components/ReviewsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
+import HeroCarousel from "@/components/HeroCarousel";
+import BuyNowSection from "@/components/BuyNowSection";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <HeroSection />
+        <HeroCarousel/>
+        <BuyNowSection/>
         <BentoGrid />
         <ReviewsSection />
         <CTASection />

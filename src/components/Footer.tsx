@@ -19,40 +19,55 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Premium Ayurvedic wellness products for better health and vitality. 
-              Trusted by thousands across India.
+              Premium Ayurvedic wellness products for better health and
+              vitality. Trusted by thousands across India.
             </p>
             <div className="flex items-center gap-2 text-primary">
               <Leaf className="w-4 h-4" />
-              <span className="text-sm font-medium">100% Natural & Ayurvedic</span>
+              <span className="text-sm font-medium">
+                100% Natural & Ayurvedic
+              </span>
             </div>
           </div>
-          
+
           {/* Quick Links */}
           <div className="space-y-4">
-            <h4 className="font-display font-semibold text-foreground">Quick Links</h4>
+            <h4 className="font-display font-semibold text-foreground">
+              Quick Links
+            </h4>
             <ul className="space-y-2">
               <li>
-                <a href="#benefits" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a
+                  href="#benefits"
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                >
                   Benefits
                 </a>
               </li>
               <li>
-                <a href="#reviews" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a
+                  href="#reviews"
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                >
                   Customer Reviews
                 </a>
               </li>
               <li>
-                <a href="#cta" className="text-muted-foreground hover:text-primary transition-colors text-sm">
+                <a
+                  href="#cta"
+                  className="text-muted-foreground hover:text-primary transition-colors text-sm"
+                >
                   Order Now
                 </a>
               </li>
             </ul>
           </div>
-          
+
           {/* Contact */}
           <div className="space-y-4">
-            <h4 className="font-display font-semibold text-foreground">Contact Us</h4>
+            <h4 className="font-display font-semibold text-foreground">
+              Contact Us
+            </h4>
             <ul className="space-y-3">
               <li className="flex items-center gap-3 text-muted-foreground text-sm">
                 <Mail className="w-4 h-4 text-primary" />
@@ -69,13 +84,14 @@ const Footer = () => {
             </ul>
           </div>
         </div>
-        
+
         <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-muted-foreground text-sm">
-            © 2024 Vistar Ayurveda. All rights reserved.
+            © {new Date().getFullYear()} Vistar Ayurveda. All rights reserved.
           </p>
           <p className="text-muted-foreground text-xs">
-            * This product is not intended to diagnose, treat, cure, or prevent any disease.
+            * This product is not intended to diagnose, treat, cure, or prevent
+            any disease.
           </p>
         </div>
       </div>

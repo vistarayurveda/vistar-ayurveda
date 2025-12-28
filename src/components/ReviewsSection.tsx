@@ -6,7 +6,7 @@ const reviews = [
     location: "Delhi",
     rating: 5,
     review:
-      "2 hafte use ke baad energy kaafi improve hui. Natural product hai, no side effects. Daily morning lene se din bhar active rehta hoon!",
+      "2 हफ्ते इस्तेमाल करने के बाद मेरी एनर्जी में काफी सुधार आया है। यह पूरी तरह प्राकृतिक प्रोडक्ट है और कोई साइड इफेक्ट नहीं हुआ। रोज़ सुबह लेने से पूरे दिन एक्टिव रहता हूँ।",
     avatar: "R",
   },
   {
@@ -14,7 +14,7 @@ const reviews = [
     location: "Mumbai",
     rating: 5,
     review:
-      "Pehle bahut thakan feel hoti thi, ab stamina bahut better hai. Wife bhi khush hai! Highly recommended for all men.",
+      "पहले बहुत थकान महसूस होती थी, लेकिन अब स्टैमिना काफी बेहतर हो गया है। पत्नी भी खुश है! सभी पुरुषों के लिए बहुत अच्छा प्रोडक्ट है।",
     avatar: "A",
   },
   {
@@ -22,7 +22,7 @@ const reviews = [
     location: "Jaipur",
     rating: 4,
     review:
-      "Ayurvedic hone ki wajah se trust tha, aur results bhi mil rahe hain. Gym performance improve hui hai significantly.",
+      "आयुर्वेदिक होने की वजह से भरोसा था और रिज़ल्ट भी दिख रहे हैं। जिम में मेरी परफॉर्मेंस पहले से काफी बेहतर हो गई है।",
     avatar: "V",
   },
   {
@@ -30,10 +30,11 @@ const reviews = [
     location: "Ahmedabad",
     rating: 5,
     review:
-      "Office ke stress ke baad bhi fresh feel hota hoon. Best Ayurvedic supplement jo maine try kiya hai. Family ko bhi recommend kar diya.",
+      "ऑफिस के तनाव के बाद भी खुद को फ्रेश महसूस करता हूँ। अब तक का सबसे अच्छा आयुर्वेदिक सप्लीमेंट जो मैंने इस्तेमाल किया है। परिवार वालों को भी रिकमेंड किया है।",
     avatar: "S",
   },
 ];
+
 
 const ReviewsSection = () => {
   return (
@@ -55,38 +56,48 @@ const ReviewsSection = () => {
           {reviews.map((review, index) => (
             <div
               key={index}
-              className="group bg-card border border-border rounded-2xl p-6 hover:border-primary/50 transition-all duration-300 hover:shadow-lg hover:shadow-primary/10 opacity-0 animate-fade-up"
+              className="group bg-card border border-border rounded-2xl p-6
+                         flex flex-col justify-between min-h-[250px]
+                         hover:border-primary/50 transition-all duration-300
+                         hover:shadow-lg hover:shadow-primary/10
+                         opacity-0 animate-fade-up"
               style={{ animationDelay: `${index * 0.15}s` }}
             >
-              {/* Rating */}
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={`w-5 h-5 ${
-                      i < review.rating
-                        ? "fill-accent text-accent"
-                        : "fill-muted text-muted"
-                    }`}
-                  />
-                ))}
+              {/* Top Content */}
+              <div>
+                {/* Rating */}
+                <div className="flex gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-5 h-5 ${
+                        i < review.rating
+                          ? "fill-accent text-accent"
+                          : "fill-muted text-muted"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                {/* Review Text */}
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  "{review.review}"
+                </p>
               </div>
 
-              {/* Review Text */}
-              <p className="text-muted-foreground text-sm leading-relaxed mb-6">
-                "{review.review}"
-              </p>
-
               {/* Author */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 pt-4 mt-6 border-t border-border">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-olive flex items-center justify-center text-foreground font-bold">
                   {review.avatar}
                 </div>
+
                 <div>
                   <p className="font-semibold text-foreground text-sm">
                     {review.name}
                   </p>
-                  <p className="text-muted-foreground text-xs">{review.location}</p>
+                  <p className="text-muted-foreground text-xs">
+                    {review.location}
+                  </p>
                 </div>
               </div>
             </div>
