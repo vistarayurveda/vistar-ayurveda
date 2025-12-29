@@ -3,7 +3,7 @@ import { Tag, Sparkles } from "lucide-react";
 
 const BuyNowSection = () => {
   return (
-    <section id="buy-now" className="py-20 relative overflow-hidden">
+    <section id="buy-now" className="py-5 lg:py-20 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary" />
       <div className="absolute top-0 left-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />

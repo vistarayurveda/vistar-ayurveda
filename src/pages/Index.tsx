@@ -6,6 +6,7 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import HeroCarousel from "@/components/HeroCarousel";
 import BuyNowSection from "@/components/BuyNowSection";
+import BuyNowModal from "@/components/BuyModal";
 
 const Index = () => {
   return (
@@ -17,6 +18,7 @@ const Index = () => {
         <BentoGrid />
         <ReviewsSection />
         <CTASection />
+        <BuyNowModal/>
       </main>
       <Footer />
     </div>
