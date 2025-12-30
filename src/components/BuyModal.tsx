@@ -28,7 +28,6 @@ const BuyNowModal = () => {
 
   const handleClose = () => {
     setOpen(false);
-    // Optionally reset or do something else on close
   };
 
   if (!open) return null;
@@ -36,6 +35,7 @@ const BuyNowModal = () => {
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
       <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-background">
+        
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary" />
         <div className="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
@@ -51,37 +51,52 @@ const BuyNowModal = () => {
 
         {/* Content */}
         <div className="relative z-10 p-8 text-center space-y-6">
+          
+          {/* Offer Badge */}
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-accent/20 border border-accent/30 rounded-full">
             <Tag className="w-5 h-5 text-accent" />
-            <span className="text-accent font-semibold">Limited Time Offer</span>
+            <span className="text-accent font-semibold">COMBO Pack Offer</span>
           </div>
 
+          {/* Pricing */}
           <div className="space-y-2">
-            <p className="text-muted-foreground text-lg line-through">₹3499/-</p>
-            <p className="font-display text-4xl font-bold text-gradient">₹1299/-</p>
-            <p className="text-sm text-accent font-semibold">Save ₹2200 Today</p>
+            <p className="text-muted-foreground text-lg line-through">
+              MRP ₹3499/-
+            </p>
+
+            <p className="font-display text-4xl font-bold text-gradient">
+              Combo Price ₹1299/-
+            </p>
+
+            <p className="text-sm text-accent font-semibold">
+              + Oil worth ₹1299 FREE
+            </p>
           </div>
 
+          {/* Bold Hinglish Copy */}
           <p className="text-muted-foreground text-sm">
-            Pure Ayurvedic formula for stamina, energy & performance. No chemicals. No side effects.
+            Energy, stamina aur performance ko next level le jaane wala
+            powerful Ayurvedic combo. Limited time ke liye combo advantage.
           </p>
 
+          {/* CTA */}
           <Button
             variant="gold"
             size="xl"
             className="w-full text-lg"
             onClick={() => window.open("#buy-now", "_self")}
           >
-            ⚡ Buy Now @ ₹1299
+            ⚡ Buy Combo @ ₹1299
           </Button>
 
           <p className="text-muted-foreground text-xs">
-            COD Available • Secure Payment • Free Shipping
+            Free Oil Included • COD Available • Secure Payment • Free Shipping
           </p>
 
+          {/* Trust Line */}
           <div className="flex items-center justify-center gap-2 text-muted-foreground text-sm pt-2">
             <Sparkles className="w-4 h-4 text-primary" />
-            <span>Offer valid for limited stock</span>
+            <span>Combo offer valid till stock lasts</span>
           </div>
         </div>
       </div>

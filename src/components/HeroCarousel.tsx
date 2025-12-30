@@ -54,7 +54,7 @@ export default function HeroCarousel() {
           nextEl: ".hero-next",
         }}
         pagination={{ clickable: true }}
-        className="w-full h-full rounded-br-[2.5rem] rounded-bl-[2.5rem]"
+        className="w-full h-full"
       >
         {products.map((product) => {
           return (

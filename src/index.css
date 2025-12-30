@@ -177,3 +177,29 @@
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
 }
+
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(22, 163, 74, 0.6) transparent;
+}
+
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(22, 163, 74, 0.6);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(22, 163, 74, 0.85);
+}
