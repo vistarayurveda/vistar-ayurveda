@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRazorpayPayment } from "@/hooks/useRazorpayPayment";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   children: ReactNode;
@@ -51,6 +52,7 @@ const UserInfoModal = ({ children }: Props) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const { openPayment } = useRazorpayPayment();
   const SHEETS_SECRET = import.meta.env.VITE_SHEETS_SECRET;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const resetForm = () => {
     setForm(initialFormState);
@@ -114,31 +116,44 @@ const UserInfoModal = ({ children }: Props) => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return; // 🔒 Prevent double click
     if (!validate()) return;
 
-    if (form.paymentMethod === "online") {
-      openPayment({
-        amount: 129900,
-        name: form.name,
-        email: form.email,
-        contact: form.phone,
-        onSuccess: async () => {
-          const response = await storeOrder("PAID");
-          if (response.success) {
-            setOpen(false);
-            setSuccessOpen(true); // ✅ Show success dialog
-          }
-        },
-      });
-    } else {
-      const response = await storeOrder("PENDING");
-      if (response.success) {
-        setOpen(false);
-        setSuccessOpen(true); // ✅ Show success dialog
-      }
-    }
+    setIsSubmitting(true);
 
-    resetForm();
+    try {
+      if (form.paymentMethod === "online") {
+        openPayment({
+          amount: 129900,
+          name: form.name,
+          email: form.email,
+          contact: form.phone,
+          onSuccess: async () => {
+            const response = await storeOrder("PAID");
+            if (response.success) {
+              setOpen(false);
+              setSuccessOpen(true);
+            }
+            resetForm();
+            setIsSubmitting(false);
+          },
+          onFailure: () => {
+            setIsSubmitting(false);
+          },
+        });
+      } else {
+        const response = await storeOrder("PENDING");
+        if (response.success) {
+          setOpen(false);
+          setSuccessOpen(true);
+        }
+        resetForm();
+        setIsSubmitting(false);
+      }
+    } catch (err) {
+      console.error(err);
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -219,7 +234,9 @@ const UserInfoModal = ({ children }: Props) => {
                 className="focus-visible:ring-transparent"
               />
               {errors.address && (
-                <span className="text-sm text-destructive">{errors.address}</span>
+                <span className="text-sm text-destructive">
+                  {errors.address}
+                </span>
               )}
             </div>
 
@@ -285,26 +302,49 @@ const UserInfoModal = ({ children }: Props) => {
           </div>
 
           <div className="flex flex-col gap-2">
-            <Button onClick={handleSubmit} className="m-0">
-              Submit
+            <Button
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="m-0 text-white flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                "Submit"
+              )}
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
       {/* Success Dialog */}
-      <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
-        <DialogContent className="sm:max-w-sm text-center">
-          <DialogHeader>
-            <DialogTitle>Order Placed Successfully!</DialogTitle>
-            <DialogDescription>
-              Thank you for your order. You will receive a confirmation shortly.
-            </DialogDescription>
-          </DialogHeader>
 
-          <Button className="mt-4" onClick={() => setSuccessOpen(false)}>
-            OK
-          </Button>
+      <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
+        <DialogContent className="sm:max-w-sm p-6">
+          <div className="flex flex-col items-center text-center gap-4">
+            {/* Title */}
+            <DialogTitle className="text-xl font-semibold text-foreground">
+              Order Placed Successfully 🎉
+            </DialogTitle>
+
+            {/* Description */}
+            <DialogDescription className="text-sm text-muted-foreground leading-relaxed">
+              Thank you for your order.
+              <br />
+              We’ll contact you shortly with confirmation details.
+            </DialogDescription>
+
+            {/* Action Button */}
+            <Button
+              className="mt-2 w-full rounded-lg"
+              onClick={() => setSuccessOpen(false)}
+            >
+              Continue
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </>

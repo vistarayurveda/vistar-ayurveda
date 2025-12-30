@@ -1,7 +1,13 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { X, Tag, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 const SHOW_TIMES = [10000, 45000];
 const STORAGE_KEY = "buyNowPopupCount";
@@ -24,38 +30,26 @@ const BuyNowModal = () => {
     }, SHOW_TIMES[stored]);
 
     return () => clearTimeout(timer);
-  }, [count]);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  if (!open) return null;
+  }, []);
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
-      <div className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-border bg-background">
-        
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent
+        className="p-0 max-w-lg overflow-hidden rounded-2xl border border-border bg-background"
+      >
         {/* Background Effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary" />
         <div className="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
 
-        {/* Close Button */}
-        <button
-          onClick={handleClose}
-          className="absolute top-4 right-4 z-20 text-muted-foreground hover:text-foreground"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
         {/* Content */}
         <div className="relative z-10 p-8 text-center space-y-6">
-          
           {/* Offer Badge */}
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-accent/20 border border-accent/30 rounded-full">
             <Tag className="w-5 h-5 text-accent" />
-            <span className="text-accent font-semibold">COMBO Pack Offer</span>
+            <span className="text-accent font-semibold">
+              COMBO Pack Offer
+            </span>
           </div>
 
           {/* Pricing */}
@@ -73,7 +67,7 @@ const BuyNowModal = () => {
             </p>
           </div>
 
-          {/* Bold Hinglish Copy */}
+          {/* Copy */}
           <p className="text-muted-foreground text-sm">
             Energy, stamina aur performance ko next level le jaane wala
             powerful Ayurvedic combo. Limited time ke liye combo advantage.
@@ -99,8 +93,8 @@ const BuyNowModal = () => {
             <span>Combo offer valid till stock lasts</span>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 
