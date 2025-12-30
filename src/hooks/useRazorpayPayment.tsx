@@ -1,12 +1,11 @@
-import Logo from '@/assets/vistar-logo.jpg'
+import Logo from "@/assets/vistar-logo.jpg";
 
 const RAZORPAY_KEY = import.meta.env.VITE_RAZORPAY_KEY;
 
 type RazorpayOptions = {
   amount: number;
   name: string;
-  email:string;
-  contact:string;
+  contact: string;
   onSuccess?: (response: any) => void;
   onFailure?: (error: any) => void;
 };
@@ -37,8 +36,6 @@ const loadRazorpay = (): Promise<boolean> => {
 export const useRazorpayPayment = () => {
   const openPayment = async ({
     amount,
-    name,
-    email,
     contact,
     onSuccess,
     onFailure,
@@ -57,8 +54,8 @@ export const useRazorpayPayment = () => {
       key: RAZORPAY_KEY,
       amount,
       currency: "INR",
-      name:"Vistar Ayurveda",
-      description:"Longjack Product",
+      name: "Vistar Ayurveda",
+      description: "Longjack Product",
       image: "https://i.ibb.co/4ggstbpn/vistar-logo.jpg",
 
       method: {
@@ -81,7 +78,6 @@ export const useRazorpayPayment = () => {
 
       prefill: {
         name: name,
-        email: email,
         contact: contact,
       },
 
