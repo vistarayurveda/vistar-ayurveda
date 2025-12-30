@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,7 @@ const initialFormState: FormState = {
 
 const UserInfoModal = ({ children }: Props) => {
   const [open, setOpen] = useState(false);
+  const [successOpen, setSuccessOpen] = useState(false); // ✅ Success dialog state
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
   const { openPayment } = useRazorpayPayment();
@@ -88,20 +90,27 @@ const UserInfoModal = ({ children }: Props) => {
   };
 
   const storeOrder = async (status: "PAID" | "PENDING") => {
-    await fetch("/api/store-order", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        secret: SHEETS_SECRET,
-        name: form.name,
-        phone: form.phone,
-        email: form.email,
-        address: form.address,
-        paymentMethod: form.paymentMethod,
-        amount: 1299,
-        status,
-      }),
-    });
+    try {
+      const res = await fetch("/api/store-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          secret: SHEETS_SECRET,
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          address: form.address,
+          paymentMethod: form.paymentMethod,
+          amount: 1299,
+          status,
+        }),
+      });
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      console.error(err);
+      return { success: false };
+    }
   };
 
   const handleSubmit = async () => {
@@ -114,160 +123,191 @@ const UserInfoModal = ({ children }: Props) => {
         email: form.email,
         contact: form.phone,
         onSuccess: async () => {
-          await storeOrder("PAID");
+          const response = await storeOrder("PAID");
+          if (response.success) {
+            setOpen(false);
+            setSuccessOpen(true); // ✅ Show success dialog
+          }
         },
       });
     } else {
-      await storeOrder("PENDING");
+      const response = await storeOrder("PENDING");
+      if (response.success) {
+        setOpen(false);
+        setSuccessOpen(true); // ✅ Show success dialog
+      }
     }
 
     resetForm();
-    setOpen(false);
   };
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(isOpen) => {
-        if (!isOpen) resetForm();
-        setOpen(isOpen);
-      }}
-    >
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <>
+      {/* User Info Form Dialog */}
+      <Dialog
+        open={open}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) resetForm();
+          setOpen(isOpen);
+        }}
+      >
+        <DialogTrigger asChild>{children}</DialogTrigger>
 
-      <DialogContent className="sm:max-w-lg gap-2">
-        <DialogHeader>
-          <DialogTitle>User Information</DialogTitle>
-          <DialogDescription>
-            Please fill in your details below.
-          </DialogDescription>
-        </DialogHeader>
+        <DialogContent className="sm:max-w-lg gap-2">
+          <DialogHeader>
+            <DialogTitle>User Information</DialogTitle>
+            <DialogDescription>
+              Please fill in your details below.
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-1">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="Enter your name"
-              value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              className="outline-none ring-none focus-visible:ring-transparent"
-            />
-            {errors.name && (
-              <span className="text-sm text-destructive">{errors.name}</span>
-            )}
-          </div>
+          <div className="grid gap-4 py-4">
+            {/* Name */}
+            <div className="grid gap-1">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                placeholder="Enter your name"
+                value={form.name}
+                onChange={(e) => handleChange("name", e.target.value)}
+                className="outline-none ring-none focus-visible:ring-transparent"
+              />
+              {errors.name && (
+                <span className="text-sm text-destructive">{errors.name}</span>
+              )}
+            </div>
 
-          <div className="grid gap-1">
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input
-              id="phone"
-              placeholder="Enter your phone number"
-              value={form.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              className="focus-visible:ring-transparent"
-            />
-            {errors.phone && (
-              <span className="text-sm text-destructive">{errors.phone}</span>
-            )}
-          </div>
+            {/* Phone */}
+            <div className="grid gap-1">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                placeholder="Enter your phone number"
+                value={form.phone}
+                onChange={(e) => handleChange("phone", e.target.value)}
+                className="focus-visible:ring-transparent"
+              />
+              {errors.phone && (
+                <span className="text-sm text-destructive">{errors.phone}</span>
+              )}
+            </div>
 
-          <div className="grid gap-1">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="Enter your email"
-              value={form.email}
-              onChange={(e) => handleChange("email", e.target.value)}
-              className="focus-visible:ring-transparent"
-            />
-            {errors.email && (
-              <span className="text-sm text-destructive">{errors.email}</span>
-            )}
-          </div>
+            {/* Email */}
+            <div className="grid gap-1">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="Enter your email"
+                value={form.email}
+                onChange={(e) => handleChange("email", e.target.value)}
+                className="focus-visible:ring-transparent"
+              />
+              {errors.email && (
+                <span className="text-sm text-destructive">{errors.email}</span>
+              )}
+            </div>
 
-          <div className="grid gap-1">
-            <Label htmlFor="address">Address</Label>
-            <Input
-              id="address"
-              placeholder="Enter your address"
-              value={form.address}
-              onChange={(e) => handleChange("address", e.target.value)}
-              className="focus-visible:ring-transparent"
-            />
-            {errors.address && (
-              <span className="text-sm text-destructive">{errors.address}</span>
-            )}
-          </div>
+            {/* Address */}
+            <div className="grid gap-1">
+              <Label htmlFor="address">Address</Label>
+              <Input
+                id="address"
+                placeholder="Enter your address"
+                value={form.address}
+                onChange={(e) => handleChange("address", e.target.value)}
+                className="focus-visible:ring-transparent"
+              />
+              {errors.address && (
+                <span className="text-sm text-destructive">{errors.address}</span>
+              )}
+            </div>
 
-          <div className="grid gap-2">
-            <Label>Payment Method</Label>
-            <RadioGroup
-              value={form.paymentMethod}
-              onValueChange={(value: "online" | "cod") =>
-                handleChange("paymentMethod", value)
-              }
-              className="grid lg:grid-cols-2 gap-4"
-            >
-              <label
-                htmlFor="online"
-                className={cn(
-                  "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition",
-                  form.paymentMethod === "online"
-                    ? "border-primary bg-primary/10"
-                    : "border-border hover:border-primary"
-                )}
+            {/* Payment Method */}
+            <div className="grid gap-2">
+              <Label>Payment Method</Label>
+              <RadioGroup
+                value={form.paymentMethod}
+                onValueChange={(value: "online" | "cod") =>
+                  handleChange("paymentMethod", value)
+                }
+                className="grid lg:grid-cols-2 gap-4"
               >
-                <RadioGroupItem
-                  value="online"
-                  id="online"
-                  className="h-4 w-4 mt-1 accent-primary"
-                />
-                <div className="flex flex-col">
-                  <span className="font-medium text-foreground">
-                    Online Payment
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    Pay securely using UPI, cards, or netbanking
-                  </span>
-                </div>
-              </label>
+                <label
+                  htmlFor="online"
+                  className={cn(
+                    "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition",
+                    form.paymentMethod === "online"
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary"
+                  )}
+                >
+                  <RadioGroupItem
+                    value="online"
+                    id="online"
+                    className="h-4 w-4 mt-1 accent-primary"
+                  />
+                  <div className="flex flex-col">
+                    <span className="font-medium text-foreground">
+                      Online Payment
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      Pay securely using UPI, cards, or netbanking
+                    </span>
+                  </div>
+                </label>
 
-              <label
-                htmlFor="cod"
-                className={cn(
-                  "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition",
-                  form.paymentMethod === "cod"
-                    ? "border-primary bg-primary/10"
-                    : "border-border hover:border-primary"
-                )}
-              >
-                <RadioGroupItem
-                  value="cod"
-                  id="cod"
-                  className="h-4 w-4 mt-1 accent-primary"
-                />
-                <div className="flex flex-col">
-                  <span className="font-medium text-foreground">
-                    Cash on Delivery (COD)
-                  </span>
-                  <span className="text-sm text-muted-foreground">
-                    Pay when your order arrives at your doorstep
-                  </span>
-                </div>
-              </label>
-            </RadioGroup>
+                <label
+                  htmlFor="cod"
+                  className={cn(
+                    "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition",
+                    form.paymentMethod === "cod"
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary"
+                  )}
+                >
+                  <RadioGroupItem
+                    value="cod"
+                    id="cod"
+                    className="h-4 w-4 mt-1 accent-primary"
+                  />
+                  <div className="flex flex-col">
+                    <span className="font-medium text-foreground">
+                      Cash on Delivery (COD)
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      Pay when your order arrives at your doorstep
+                    </span>
+                  </div>
+                </label>
+              </RadioGroup>
+            </div>
           </div>
-        </div>
 
-        <div className="flex flex-col gap-2">
-          <Button onClick={handleSubmit} className="m-0">
-            Submit
+          <div className="flex flex-col gap-2">
+            <Button onClick={handleSubmit} className="m-0">
+              Submit
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Dialog */}
+      <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
+        <DialogContent className="sm:max-w-sm text-center">
+          <DialogHeader>
+            <DialogTitle>Order Placed Successfully!</DialogTitle>
+            <DialogDescription>
+              Thank you for your order. You will receive a confirmation shortly.
+            </DialogDescription>
+          </DialogHeader>
+
+          <Button className="mt-4" onClick={() => setSuccessOpen(false)}>
+            OK
           </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
