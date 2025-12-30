@@ -23,6 +23,8 @@ const BuyNowModal = () => {
     if (stored >= 2) return;
 
     const timer = setTimeout(() => {
+      if (document.querySelector('[role="dialog"]')) return;
+      
       setOpen(true);
       const newCount = stored + 1;
       sessionStorage.setItem(STORAGE_KEY, String(newCount));

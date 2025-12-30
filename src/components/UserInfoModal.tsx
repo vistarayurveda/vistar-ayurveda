@@ -116,7 +116,7 @@ const UserInfoModal = ({ children }: Props) => {
   };
 
   const handleSubmit = async () => {
-    if (isSubmitting) return; // 🔒 Prevent double click
+    if (isSubmitting) return;
     if (!validate()) return;
 
     setIsSubmitting(true);
@@ -131,7 +131,6 @@ const UserInfoModal = ({ children }: Props) => {
           onSuccess: async () => {
             const response = await storeOrder("PAID");
             if (response.success) {
-              setOpen(false);
               setSuccessOpen(true);
             }
             resetForm();
@@ -141,6 +140,7 @@ const UserInfoModal = ({ children }: Props) => {
             setIsSubmitting(false);
           },
         });
+        setOpen(false);
       } else {
         const response = await storeOrder("PENDING");
         if (response.success) {
@@ -162,7 +162,10 @@ const UserInfoModal = ({ children }: Props) => {
       <Dialog
         open={open}
         onOpenChange={(isOpen) => {
-          if (!isOpen) resetForm();
+          if (!isOpen) {
+            resetForm();
+            setIsSubmitting(false);
+          }
           setOpen(isOpen);
         }}
       >
@@ -322,7 +325,15 @@ const UserInfoModal = ({ children }: Props) => {
 
       {/* Success Dialog */}
 
-      <Dialog open={successOpen} onOpenChange={setSuccessOpen}>
+      <Dialog
+        open={successOpen}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setIsSubmitting(false);
+          }
+          setSuccessOpen(isOpen);
+        }}
+      >
         <DialogContent className="sm:max-w-sm p-6">
           <div className="flex flex-col items-center text-center gap-4">
             {/* Title */}
