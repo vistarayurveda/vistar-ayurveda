@@ -3,10 +3,8 @@
 import { useEffect, useState } from "react";
 import { X, Tag, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import UserInfoModal from "./UserInfoModal";
 
 const SHOW_TIMES = [10000, 45000];
 const STORAGE_KEY = "buyNowPopupCount";
@@ -23,7 +21,7 @@ const BuyNowModal = () => {
 
     const timer = setTimeout(() => {
       if (document.querySelector('[role="dialog"]')) return;
-      
+
       setOpen(true);
       const newCount = stored + 1;
       sessionStorage.setItem(STORAGE_KEY, String(newCount));
@@ -35,19 +33,15 @@ const BuyNowModal = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent
-        className="p-0 max-w-lg overflow-hidden rounded-2xl border border-border bg-background"
-      >
+      <DialogContent className="p-0 max-w-lg overflow-hidden rounded-2xl border border-border bg-background">
         <div className="absolute inset-0 bg-gradient-to-br from-secondary via-background to-secondary" />
         <div className="absolute -top-20 -left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
-        
+
         <div className="relative p-8 text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-accent/20 border border-accent/30 rounded-full">
             <Tag className="w-5 h-5 text-accent" />
-            <span className="text-accent font-semibold">
-              COMBO Pack Offer
-            </span>
+            <span className="text-accent font-semibold">COMBO Pack Offer</span>
           </div>
 
           <div className="space-y-2">
@@ -65,18 +59,14 @@ const BuyNowModal = () => {
           </div>
 
           <p className="text-muted-foreground text-sm">
-            Energy, stamina aur performance ko next level le jaane wala
-            powerful Ayurvedic combo. Limited time ke liye combo advantage.
+            Energy, stamina aur performance ko next level le jaane wala powerful
+            Ayurvedic combo. Limited time ke liye combo advantage.
           </p>
-
-          <Button
-            variant="gold"
-            size="xl"
-            className="w-full text-lg"
-            onClick={() => window.open("#buy-now", "_self")}
-          >
-            ⚡ Buy Combo @ ₹1299
-          </Button>
+          <UserInfoModal>
+            <Button variant="gold" size="xl" className="w-full text-lg">
+              ⚡ Buy Combo @ ₹1299
+            </Button>
+          </UserInfoModal>
 
           <p className="text-muted-foreground text-xs">
             Free Oil Included • COD Available • Secure Payment • Free Shipping

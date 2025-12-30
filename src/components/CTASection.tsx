@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Leaf, Shield, Truck, Gift } from "lucide-react";
+import UserInfoModal from "./UserInfoModal";
 
 const CTASection = () => {
   return (
@@ -45,14 +46,15 @@ const CTASection = () => {
           
           {/* CTA Button */}
           <div className="pt-4 opacity-0 animate-fade-up stagger-3">
+            <UserInfoModal>
             <Button
               variant="gold"
               size="xl"
               className="text-lg px-12"
-              onClick={() => window.open("#", "_blank")}
             >
               🌿 Order Longjack Now
             </Button>
+            </UserInfoModal>
             <p className="text-muted-foreground text-sm mt-4">
               COD Available • Secure Payment • Easy Returns
             </p>

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Tag, Sparkles } from "lucide-react";
+import UserInfoModal from "./UserInfoModal";
 
 const BuyNowSection = () => {
   return (
@@ -11,18 +12,14 @@ const BuyNowSection = () => {
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center space-y-6">
-
           {/* Offer Badge */}
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-accent/20 border border-accent/30 rounded-full">
             <Tag className="w-5 h-5 text-accent" />
-            <span className="text-accent font-semibold">
-              COMBO Pack Offer
-            </span>
+            <span className="text-accent font-semibold">COMBO Pack Offer</span>
           </div>
 
           {/* Pricing Section */}
           <div className="space-y-4 max-w-xl mx-auto">
-
             {/* Prices */}
             <div className="space-y-2">
               <p className="text-muted-foreground text-lg line-through">
@@ -40,19 +37,21 @@ const BuyNowSection = () => {
 
             {/* Sub Text */}
             <p className="text-muted-foreground text-sm max-w-md mx-auto">
-Energy, stamina aur performance ko next level le jaane wala complete Ayurvedic combo. Limited time ke liye combo advantage.
+              Energy, stamina aur performance ko next level le jaane wala
+              complete Ayurvedic combo. Limited time ke liye combo advantage.
             </p>
 
             {/* CTA Button */}
             <div className="pt-4">
-              <Button
-                variant="gold"
-                size="xl"
-                className="w-full text-lg"
-                onClick={() => window.open("#", "_blank")}
-              >
-                ⚡ Buy Combo @ ₹1299
-              </Button>
+              <UserInfoModal>
+                <Button
+                  variant="gold"
+                  size="xl"
+                  className="w-full text-lg"
+                >
+                  ⚡ Buy Combo @ ₹1299
+                </Button>
+              </UserInfoModal>
 
               <p className="text-muted-foreground text-xs mt-4">
                 Free Oil Included • COD Available • Free Shipping
@@ -65,7 +64,6 @@ Energy, stamina aur performance ko next level le jaane wala complete Ayurvedic c
             <Sparkles className="w-4 h-4 text-primary" />
             <span>Combo offer valid till stock lasts</span>
           </div>
-
         </div>
       </div>
     </section>
