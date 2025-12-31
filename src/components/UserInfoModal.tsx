@@ -99,7 +99,7 @@ const UserInfoModal = ({ children }: Props) => {
           landmark: form.landmark || "",
           pincode: form.pincode || "",
           paymentMethod: form.paymentMethod,
-          amount: 1299,
+          amount: "1299",
           status,
         }),
       });
