@@ -9,7 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
 import heroMain from "@/assets/hero-main.png";
-import heroMainMobile from "@/assets/hero-main-mobile.png";
+import heroMainMobile from "@/assets/hero-main-mobile.jpg";
 import Ingredient from "@/assets/Ingredient.png";
 import IngredientMobile from "@/assets/Ingredient-mobile.png";
 import BackLongjack from "@/assets/back.png"
