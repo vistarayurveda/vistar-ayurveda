@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRazorpayPayment } from "@/hooks/useRazorpayPayment";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
 type Props = {
   children: ReactNode;
@@ -129,15 +130,24 @@ const UserInfoModal = ({ children }: Props) => {
             resetForm();
             setIsSubmitting(false);
           },
-          onFailure: () => setIsSubmitting(false),
+          onFailure: () => {
+            setIsSubmitting(false)
+            toast.error("Payment Failed", {
+            className: "!bg-red-500 !text-white !border-red-500",
+          });
+          },
         });
         setOpen(false);
       } else {
         const response = await storeOrder("PENDING");
         if (response.success) {
-          setOpen(false);
           setSuccessOpen(true);
+        } else {
+          toast.error("Failed to place the order", {
+            className: "!bg-red-500 !text-white !border-red-500",
+          });
         }
+        setOpen(false);
         resetForm();
         setIsSubmitting(false);
       }
@@ -237,7 +247,6 @@ const UserInfoModal = ({ children }: Props) => {
 
             {/* Payment Method */}
             <div className="grid gap-2">
-              
               <Label>Payment Method</Label>
               <RadioGroup
                 value={form.paymentMethod}
@@ -246,7 +255,6 @@ const UserInfoModal = ({ children }: Props) => {
                 }
                 className="grid lg:grid-cols-1 gap-4"
               >
-                
                 {/* <label htmlFor="online" className={cn( "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition", form.paymentMethod === "online" ? "border-primary bg-primary/10" : "border-border hover:border-primary" )} > <RadioGroupItem value="online" id="online" className="h-4 w-4 mt-1 accent-primary" /> <div className="flex flex-col"> <span className="font-medium text-foreground"> Online Payment </span> <span className="text-sm text-muted-foreground"> Pay securely using UPI, cards, or netbanking </span> </div> </label> */}
                 <label
                   htmlFor="cod"
@@ -257,20 +265,16 @@ const UserInfoModal = ({ children }: Props) => {
                       : "border-border hover:border-primary"
                   )}
                 >
-                  
                   <RadioGroupItem
                     value="cod"
                     id="cod"
                     className="h-4 w-4 mt-1 accent-primary"
                   />
                   <div className="flex flex-col">
-                    
                     <span className="font-medium text-foreground">
-                      
                       Cash on Delivery (COD)
                     </span>
                     <span className="text-sm text-muted-foreground">
-                      
                       Pay when your order arrives at your doorstep
                     </span>
                   </div>
