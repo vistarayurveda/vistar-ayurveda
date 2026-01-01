@@ -14,7 +14,7 @@ const reviews = [
     location: "Mumbai",
     rating: 5,
     review:
-      "पहले जल्दी थक जाता था और प्रदर्शन कमज़ोर था। अब मेरी परफॉर्मेंस इतनी मजबूत है कि पत्नी भी हैरान है। हर पुरुष को इसे आज़माना चाहिए।",
+      "Pehle main jaldi thak jaata tha aur performance weak thi. Ab meri performance itni strong ho gayi hai ki meri wife bhi surprise ho gayi hai. Har mard ko ye zaroor try karna chahiye.",
     avatar: "A",
   },
   {
