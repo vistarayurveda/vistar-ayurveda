@@ -14,9 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useRazorpayPayment } from "@/hooks/useRazorpayPayment";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { load } from "@cashfreepayments/cashfree-js";
 
 type Props = {
   children: ReactNode;
@@ -51,7 +51,6 @@ const UserInfoModal = ({ children }: Props) => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [form, setForm] = useState<FormState>(initialFormState);
   const [errors, setErrors] = useState<FormErrors>({});
-  const { openPayment } = useRazorpayPayment();
   const SHEETS_SECRET = import.meta.env.VITE_SHEETS_SECRET;
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -112,34 +111,70 @@ const UserInfoModal = ({ children }: Props) => {
     }
   };
 
-  const handleSubmit = async () => {
-    if (isSubmitting) return;
-    if (!validate()) return;
+  const openCashfreeCheckout = async (sessionId: string) => {
+    const cashfree = await load({
+      mode: "sandbox",
+    });
 
-    setIsSubmitting(true);
+    const options = {
+      paymentSessionId: sessionId,
+      redirectTarget: "_modal",
+    };
+
+    return await cashfree.checkout(options);
+  };
+
+  const handleSubmit = async () => {
+    if (!validate()) return;
 
     try {
       if (form.paymentMethod === "online") {
-        openPayment({
-          amount: 129900,
-          name: form.name,
-          contact: form.phone,
-          onSuccess: async () => {
-            const response = await storeOrder("PAID");
-            if (response.success) setSuccessOpen(true);
-            resetForm();
-            setIsSubmitting(false);
-          },
-          onFailure: () => {
-            setIsSubmitting(false)
-            toast.error("Payment Failed", {
-            className: "!bg-red-500 !text-white !border-red-500",
-          });
-          },
+        const orderRes = await fetch("/api/createOrder", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: 1299,
+            name: form.name,
+            phone: form.phone,
+          }),
         });
+
+        const orderData = await orderRes.json();
+
+        if (!orderData.payment_session_id) {
+          toast.error("Failed to initiate Cashfree payment");
+          return;
+        }
+
         setOpen(false);
+
+        const result = await openCashfreeCheckout(orderData.payment_session_id);
+
+        console.log("Cashfree Result:", result);
+
+        const payload = {
+          secret: SHEETS_SECRET,
+          name: form.name,
+          phone: form.phone,
+          address: form.address,
+          landmark: form.landmark || "",
+          pincode: form.pincode || "",
+          paymentMethod: form.paymentMethod,
+          amount: "1299",
+        };
+        const status = result.txStatus === "SUCCESS" ? "PAID" : "PENDING";
+        const response = await storeOrder(status);
+
+        if (response.success) {
+          setSuccessOpen(true);
+        } else {
+          toast.error("Order storage failed after payment");
+        }
+
+        resetForm();
       } else {
         const response = await storeOrder("PENDING");
+
         if (response.success) {
           setSuccessOpen(true);
         } else {
@@ -147,13 +182,13 @@ const UserInfoModal = ({ children }: Props) => {
             className: "!bg-red-500 !text-white !border-red-500",
           });
         }
+
         setOpen(false);
         resetForm();
-        setIsSubmitting(false);
       }
     } catch (err) {
       console.error(err);
-      setIsSubmitting(false);
+      toast.error("Something went wrong");
     }
   };
 
@@ -253,9 +288,35 @@ const UserInfoModal = ({ children }: Props) => {
                 onValueChange={(value: "online" | "cod") =>
                   handleChange("paymentMethod", value)
                 }
-                className="grid lg:grid-cols-1 gap-4"
+                className="grid lg:grid-cols-2 gap-4"
               >
-                {/* <label htmlFor="online" className={cn( "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition", form.paymentMethod === "online" ? "border-primary bg-primary/10" : "border-border hover:border-primary" )} > <RadioGroupItem value="online" id="online" className="h-4 w-4 mt-1 accent-primary" /> <div className="flex flex-col"> <span className="font-medium text-foreground"> Online Payment </span> <span className="text-sm text-muted-foreground"> Pay securely using UPI, cards, or netbanking </span> </div> </label> */}
+                <label
+                  htmlFor="online"
+                  className={cn(
+                    "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition",
+                    form.paymentMethod === "online"
+                      ? "border-primary bg-primary/10"
+                      : "border-border hover:border-primary"
+                  )}
+                >
+                  {" "}
+                  <RadioGroupItem
+                    value="online"
+                    id="online"
+                    className="h-4 w-4 mt-1 accent-primary"
+                  />{" "}
+                  <div className="flex flex-col">
+                    {" "}
+                    <span className="font-medium text-foreground">
+                      {" "}
+                      Online Payment{" "}
+                    </span>{" "}
+                    <span className="text-sm text-muted-foreground">
+                      {" "}
+                      Pay securely using UPI, cards, or netbanking{" "}
+                    </span>{" "}
+                  </div>{" "}
+                </label>
                 <label
                   htmlFor="cod"
                   className={cn(
