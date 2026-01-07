@@ -24,7 +24,7 @@ export const useCashfreePayment = () => {
       const verifyRes = await axios.post(`/api/verifyOrder`, { orderId });
 
       const payments= verifyRes.data || [];
-      console.log("Payment verification response:", payments);
+      
       const isPaid = payments.some(
         (p) => p.payment_status === "SUCCESS"
       );

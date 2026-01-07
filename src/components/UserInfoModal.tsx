@@ -53,6 +53,7 @@ const UserInfoModal = ({ children }: Props) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const SHEETS_SECRET = import.meta.env.VITE_SHEETS_SECRET;
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [placingOrder, setPlacingOrder] = useState(false);
   const { openPayment } = useCashfreePayment();
   const resetForm = () => {
     setForm(initialFormState);
@@ -141,13 +142,15 @@ const UserInfoModal = ({ children }: Props) => {
           orderId: orderData.order_id,
 
           onSuccess: async () => {
+            setPlacingOrder(true);
             const response = await storeOrder("PAID");
-
+            
             response.success
               ? setSuccessOpen(true)
               : toast.error("Order storage failed after payment");
 
             resetForm();
+            setPlacingOrder(false);
             setIsSubmitting(false);
           },
 
@@ -360,6 +363,18 @@ const UserInfoModal = ({ children }: Props) => {
             <Button onClick={() => setSuccessOpen(false)} className="w-full">
               Continue
             </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={placingOrder}>
+        <DialogContent className="sm:max-w-xs p-6">
+          <div className="flex flex-col items-center gap-4">
+            <Loader2 className="h-6 w-6 animate-spin" />
+            <span className="text-lg font-medium">Placing Order...</span>
+            <span className="text-sm text-muted-foreground">
+              Please wait while we confirm your order
+            </span>
           </div>
         </DialogContent>
       </Dialog>
