@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { load } from "@cashfreepayments/cashfree-js";
+import { useCashfreePayment } from "@/hooks/useCashfreePayment";
 
 type Props = {
   children: ReactNode;
@@ -53,7 +53,7 @@ const UserInfoModal = ({ children }: Props) => {
   const [errors, setErrors] = useState<FormErrors>({});
   const SHEETS_SECRET = import.meta.env.VITE_SHEETS_SECRET;
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { openPayment } = useCashfreePayment();
   const resetForm = () => {
     setForm(initialFormState);
     setErrors({});
@@ -111,19 +111,6 @@ const UserInfoModal = ({ children }: Props) => {
     }
   };
 
-  const openCashfreeCheckout = async (sessionId: string) => {
-    const cashfree = await load({
-      mode: "sandbox",
-    });
-
-    const options = {
-      paymentSessionId: sessionId,
-      redirectTarget: "_modal",
-    };
-
-    return await cashfree.checkout(options);
-  };
-
   const handleSubmit = async () => {
     if (!validate()) return;
 
@@ -141,37 +128,37 @@ const UserInfoModal = ({ children }: Props) => {
 
         const orderData = await orderRes.json();
 
-        if (!orderData.payment_session_id) {
+        if (!orderData.payment_session_id || !orderData.order_id) {
           toast.error("Failed to initiate Cashfree payment");
           return;
         }
 
+        setIsSubmitting(true);
         setOpen(false);
 
-        const result = await openCashfreeCheckout(orderData.payment_session_id);
+        await openPayment({
+          sessionId: orderData.payment_session_id,
+          orderId: orderData.order_id,
 
-        console.log("Cashfree Result:", result);
+          onSuccess: async () => {
+            const response = await storeOrder("PAID");
 
-        const payload = {
-          secret: SHEETS_SECRET,
-          name: form.name,
-          phone: form.phone,
-          address: form.address,
-          landmark: form.landmark || "",
-          pincode: form.pincode || "",
-          paymentMethod: form.paymentMethod,
-          amount: "1299",
-        };
-        const status = result.txStatus === "SUCCESS" ? "PAID" : "PENDING";
-        const response = await storeOrder(status);
+            response.success
+              ? setSuccessOpen(true)
+              : toast.error("Order storage failed after payment");
 
-        if (response.success) {
-          setSuccessOpen(true);
-        } else {
-          toast.error("Order storage failed after payment");
-        }
+            resetForm();
+            setIsSubmitting(false);
+          },
 
-        resetForm();
+          onFailure: async () => {
+            toast.error("Payment failed or was cancelled", {
+              className: "!bg-red-500 !text-white !border-red-500",
+            });
+            resetForm();
+            setIsSubmitting(false);
+          },
+        });
       } else {
         const response = await storeOrder("PENDING");
 

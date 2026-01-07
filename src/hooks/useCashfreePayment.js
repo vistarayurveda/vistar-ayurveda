@@ -1,6 +1,13 @@
+
+
 export const useCashfreePayment = () => {
 
-  const openPayment = async ({ sessionId, orderId, onSuccess, onFailure }) => {
+  const openPayment = async ({
+    sessionId,
+    orderId,
+    onSuccess,
+    onFailure,
+  }) => {
 
     try {
       const cashfree = await load({ mode: "sandbox" });
@@ -10,14 +17,16 @@ export const useCashfreePayment = () => {
         redirectTarget: "_modal",
       };
 
-      await cashfree.checkout(checkoutOptions);
+      const result = await cashfree.checkout(checkoutOptions);
 
-      // After checkout completes
+      // Call verification API
       const verifyRes = await axios.post(`/api/verifyOrder`, { orderId });
 
-      const payments = verifyRes.data;
+      const payments = verifyRes.data || [];
 
-      const isPaid = payments.some(p => p.payment_status === "SUCCESS");
+      const isPaid = payments.some(
+        (p) => p.payment_status === "SUCCESS"
+      );
 
       isPaid
         ? onSuccess({ orderId, payments })
