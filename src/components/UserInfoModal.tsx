@@ -155,6 +155,7 @@ const UserInfoModal = ({ children }: Props) => {
             toast.error("Payment failed or was cancelled", {
               className: "!bg-red-500 !text-white !border-red-500",
             });
+
             resetForm();
             setIsSubmitting(false);
           },
