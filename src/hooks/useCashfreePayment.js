@@ -1,21 +1,31 @@
-import { load } from "@cashfreepayments/cashfree-js";
-
 export const useCashfreePayment = () => {
 
-  const openPayment = async ({ sessionId, onSuccess, onFailure }) => {
+  const openPayment = async ({ sessionId, orderId, onSuccess, onFailure }) => {
 
-    const cashfree = await load({
-      mode: "sandbox"
-    });
+    try {
+      const cashfree = await load({ mode: "sandbox" });
 
-    let checkoutOptions = {
-      paymentSessionId: sessionId,
-      redirectTarget: "_modal",
-    };
+      const checkoutOptions = {
+        paymentSessionId: sessionId,
+        redirectTarget: "_modal",
+      };
 
-    cashfree.checkout(checkoutOptions)
-      .then(onSuccess)
-      .catch(onFailure);
+      await cashfree.checkout(checkoutOptions);
+
+      // After checkout completes
+      const verifyRes = await axios.post(`/api/verifyOrder`, { orderId });
+
+      const payments = verifyRes.data;
+
+      const isPaid = payments.some(p => p.payment_status === "SUCCESS");
+
+      isPaid
+        ? onSuccess({ orderId, payments })
+        : onFailure({ message: "Payment not completed" });
+
+    } catch (err) {
+      onFailure(err);
+    }
   };
 
   return { openPayment };
