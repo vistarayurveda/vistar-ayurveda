@@ -1,4 +1,5 @@
-
+import { load } from "@cashfreepayments/cashfree-js";
+import axios from "axios";
 
 export const useCashfreePayment = () => {
 
@@ -19,10 +20,10 @@ export const useCashfreePayment = () => {
 
       const result = await cashfree.checkout(checkoutOptions);
 
-      // Call verification API
+      // Now verify payment
       const verifyRes = await axios.post(`/api/verifyOrder`, { orderId });
 
-      const payments = verifyRes.data || [];
+      const payments= verifyRes.data || [];
 
       const isPaid = payments.some(
         (p) => p.payment_status === "SUCCESS"
