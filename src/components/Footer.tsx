@@ -3,7 +3,7 @@ import vistarLogo from "@/assets/vistar-logo.jpg";
 
 const Footer = () => {
   return (
-    <footer className="bg-card border-t border-border py-12">
+    <footer className="bg-card border-t border-border py-12 pb-6">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Brand */}
@@ -81,14 +81,26 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-muted-foreground text-sm">
+        <div className="mt-12 pt-6 border-t border-border flex flex-col md:flex-row items-start md:items-center gap-4">
+          {/* Disclaimer */}
+          <div className="flex-2 text-muted-foreground text-xs leading-relaxed">
+            <h3 className="mb-1 text-sm font-medium text-foreground">
+              Disclaimer
+            </h3>
+            <p>
+              * This product is a{" "}
+              <span className="text-foreground font-medium">
+                dietary supplement
+              </span>{" "}
+              and is not intended to diagnose, treat, cure, or prevent any
+              disease. Individual results may vary from person to person.
+            </p>
+          </div>
+
+          {/* Copyright */}
+          <div className="flex-1 text-muted-foreground text-xs md:text-right">
             © {new Date().getFullYear()} Vistar Ayurveda. All rights reserved.
-          </p>
-          <p className="text-muted-foreground text-xs">
-            * This product is not intended to diagnose, treat, cure, or prevent
-            any disease.
-          </p>
+          </div>
         </div>
       </div>
     </footer>
