@@ -279,9 +279,9 @@ const UserInfoModal = ({ children }: Props) => {
                 onValueChange={(value: "online" | "cod") =>
                   handleChange("paymentMethod", value)
                 }
-                className="grid lg:grid-cols-2 gap-4"
+                className="grid lg:grid-cols-1 gap-4"
               >
-                <label
+                {/* <label
                   htmlFor="online"
                   className={cn(
                     "cursor-pointer border rounded-lg p-2 flex items-start space-x-2 transition",
@@ -307,7 +307,7 @@ const UserInfoModal = ({ children }: Props) => {
                       Pay securely using UPI, cards, or netbanking{" "}
                     </span>{" "}
                   </div>{" "}
-                </label>
+                </label> */}
                 <label
                   htmlFor="cod"
                   className={cn(
